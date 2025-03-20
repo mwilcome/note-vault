@@ -2,7 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     id("app.cash.sqldelight") version "2.0.2"
@@ -54,14 +54,27 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
+        applicationId = "com.notevault"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-    }
-    testOptions {
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = 1
+        versionName = "1.0"
     }
     lint {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    tasks.withType<JavaCompile> {  // Added to align Java compilation with Kotlin
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
 }
 
